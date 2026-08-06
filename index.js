@@ -20,9 +20,10 @@ const fs = require('fs');
 const http = require('http');
 const https = require('https');
 
-// --- 0. خادم إبقاء البوت شغالاً 24/7 ---
-const PORT = process.env.PORT || 8081;
+// --- 0. خادم إبقاء البوت شغالاً 24/7 (متوافق مع Render و UptimeRobot) ---
+const PORT = process.env.PORT || 10000;
 http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.write("Merryweather Bot is Online!");
     res.end();
 }).listen(PORT, () => {
