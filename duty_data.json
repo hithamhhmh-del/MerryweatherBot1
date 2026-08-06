@@ -1,0 +1,231 @@
+{
+  "activeSessions": {
+    "716349760641957980": 1785667888126,
+    "964757645590409236": 1785668175720
+  },
+  "logs": [
+    {
+      "userId": "964757645590409236",
+      "startTime": 1785294566681,
+      "endTime": 1785294590792,
+      "durationMs": 24111
+    },
+    {
+      "userId": "964757645590409236",
+      "startTime": 1785295335271,
+      "endTime": 1785295345429,
+      "durationMs": 10158
+    },
+    {
+      "userId": "678937684500152346",
+      "startTime": 1785295739244,
+      "endTime": 1785295746972,
+      "durationMs": 7728
+    },
+    {
+      "userId": "964757645590409236",
+      "startTime": 1785295566319,
+      "endTime": 1785327012070,
+      "durationMs": 31445752
+    },
+    {
+      "userId": "964757645590409236",
+      "startTime": 1785380357847,
+      "endTime": 1785380365245,
+      "durationMs": 7398
+    },
+    {
+      "userId": "678937684500152346",
+      "startTime": 1785382066883,
+      "endTime": 1785382070852,
+      "durationMs": 3970
+    },
+    {
+      "userId": "1068520107611017216",
+      "startTime": 1785306062944,
+      "endTime": 1785382210003,
+      "durationMs": 76147059
+    }
+  ],
+  "lastActivity": {
+    "964757645590409236": 1785382689040,
+    "1068520107611017216": 1785306068195,
+    "678937684500152346": 1785382215303
+  },
+  "reportLogs": [
+    {
+      "taskNum": "ee",
+      "submittedBy": "964757645590409236",
+      "leaderId": "716349760641957980",
+      "members": [
+        "964757645590409236",
+        "642750764304957440"
+      ],
+      "isSuccess": true,
+      "isSuspicious": false,
+      "timestamp": 1785663523591
+    },
+    {
+      "taskNum": "1",
+      "submittedBy": "964757645590409236",
+      "leaderId": "716349760641957980",
+      "members": [
+        "964757645590409236",
+        "557628352828014614"
+      ],
+      "isSuccess": true,
+      "isSuspicious": true,
+      "timestamp": 1785663612087
+    }
+  ],
+  "tickets": {
+    "1531972602250137730": {
+      "userId": "964757645590409236",
+      "name": "xrq0z",
+      "isClosed": false
+    },
+    "1531979808718717042": {
+      "userId": "964757645590409236",
+      "name": "xrq0z",
+      "closedLogMessageId": "1531982327511519255",
+      "isClosed": true
+    },
+    "1531982410412064868": {
+      "userId": "964757645590409236",
+      "name": "xrq0z",
+      "closedLogMessageId": "1531984928747556897",
+      "isClosed": true
+    },
+    "1531987075690135684": {
+      "userId": "964757645590409236",
+      "name": "استفسار-1",
+      "isClosed": false
+    },
+    "1531987219609554944": {
+      "userId": "964757645590409236",
+      "name": "استفسار-2",
+      "isClosed": true,
+      "closedLogMessageId": "1531987279164211231"
+    },
+    "1531988564085051402": {
+      "userId": "678937684500152346",
+      "name": "بان-3",
+      "closedLogMessageId": "1531991082580181104",
+      "isClosed": true
+    },
+    "1531988673657049108": {
+      "userId": "964757645590409236",
+      "name": "بان-4",
+      "isClosed": false
+    },
+    "1531994421040775188": {
+      "userId": "964757645590409236",
+      "name": "ticket-5",
+      "isClosed": true,
+      "closedLogMessageId": "1531996685058838601"
+    },
+    "1531996040155234525": {
+      "userId": "964757645590409236",
+      "name": "ticket-6",
+      "categoryId": null,
+      "isClosed": true,
+      "messagesHistory": [],
+      "closedLogMessageId": "1531996276193759418"
+    },
+    "1531996432528310362": {
+      "userId": "964757645590409236",
+      "name": "استفسار-7",
+      "isClosed": true,
+      "closedLogMessageId": "1531996647452840007"
+    },
+    "1531996486928306387": {
+      "userId": "964757645590409236",
+      "name": "شكوى-8",
+      "isClosed": true,
+      "closedLogMessageId": "1531996590796177580"
+    },
+    "1531996499473338389": {
+      "userId": "964757645590409236",
+      "name": "استقالة-9",
+      "isClosed": true,
+      "closedLogMessageId": "1531996611465445489"
+    },
+    "1531996721087774921": {
+      "userId": "964757645590409236",
+      "name": "إجازة-10",
+      "isClosed": false
+    },
+    "1532211367954878515": {
+      "userId": "964757645590409236",
+      "name": "باند-1",
+      "isClosed": true,
+      "closedLogMessageId": "1532212759800840284"
+    },
+    "1532212725110014134": {
+      "userId": "964757645590409236",
+      "name": "باند-2",
+      "isClosed": true,
+      "closedLogMessageId": "1532212886951297146"
+    },
+    "1532212730117882049": {
+      "userId": "678937684500152346",
+      "name": "إجازة-1",
+      "isClosed": false
+    },
+    "1532218668149112906": {
+      "userId": "964757645590409236",
+      "name": "باند-3",
+      "isClosed": false,
+      "closedLogMessageId": "1532218758679105683"
+    }
+  },
+  "ticketCounter": 12,
+  "ticketCounters": {
+    "باند": 3,
+    "إجازة": 1,
+    "cat_complaint": 6,
+    "cat_inquiry": 3,
+    "cat_resignation": 2,
+    "cat_vacation": 1
+  },
+  "lastReportTime": {
+    "964757645590409236": 1785663612087
+  },
+  "userStats": {
+    "716349760641957980": {
+      "totalReports": 2,
+      "asLeader": 2,
+      "asMember": 0,
+      "successfulTasks": 2,
+      "failedTasks": 0
+    },
+    "964757645590409236": {
+      "totalReports": 2,
+      "asLeader": 0,
+      "asMember": 2,
+      "successfulTasks": 2,
+      "failedTasks": 0
+    },
+    "642750764304957440": {
+      "totalReports": 1,
+      "asLeader": 0,
+      "asMember": 1,
+      "successfulTasks": 1,
+      "failedTasks": 0
+    },
+    "557628352828014614": {
+      "totalReports": 1,
+      "asLeader": 0,
+      "asMember": 1,
+      "successfulTasks": 1,
+      "failedTasks": 0
+    }
+  },
+  "userDutyStats": {
+    "678937684500152346": {
+      "totalMs": 13723,
+      "forceOffCount": 0
+    }
+  },
+  "snoozeSessions": {}
+}
