@@ -116,7 +116,7 @@ function formatDuration(ms) {
 const commands = [
     new SlashCommandBuilder().setName('حضور_المنظمة').setDescription('إرسال لوحة نظام تسجيل الحضور والغياب'),
     new SlashCommandBuilder().setName('لوحة_التحكم').setDescription('إرسال لوحة التحكم والإشراف العام'),
-    new SlashCommandBuilder().setName('جرد_الأسبوع').setDescription('استخراج تقرير جرد ساعات الحضور للأسبوع الماضي'),
+    new SlashCommandBuilder().setName('جرد_الأسبوع').setDescription('استخرج تقرير جرد ساعات الحضور للأسبوع الماضي'),
     new SlashCommandBuilder().setName('جرد_التقارير').setDescription('استخراج إحصائيات تقارير المهام للأسبوع الماضي'),
     new SlashCommandBuilder().setName('تصفير_الجرد').setDescription('تصفير كافة البيانات والتقارير وساعات الحضور لجميع الأعضاء'),
     new SlashCommandBuilder()
@@ -408,4 +408,11 @@ client.on('interactionCreate', async interaction => {
                     new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('prot_num').setLabel('رقم المهمة').setValue(oldEmbed.fields[0]?.value || '').setStyle(TextInputStyle.Short).setRequired(true)),
                     new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('prot_type').setLabel('نوع المهمة').setValue(oldEmbed.fields[1]?.value || '').setStyle(TextInputStyle.Short).setRequired(true)),
                     new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('prot_times').setLabel('التوقيت').setValue(oldEmbed.fields[2]?.value || '').setStyle(TextInputStyle.Short).setRequired(true)),
-                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('prot_leader_count').setLabel('القائد المسؤول والفريق').setValue(oldEmbed.fields[3]?.value || '').setStyle(TextInputStyle.Short).
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('prot_leader_count').setLabel('القائد المسؤول والفريق').setValue(oldEmbed.fields[3]?.value || '').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('prot_notes').setLabel('الملاحظات').setValue(oldEmbed.fields[4]?.value || '').setStyle(TextInputStyle.Paragraph).setRequired(false))
+                );
+                return await interaction.showModal(modal);
+            }
+
+            if (category === 'supply') {
+                const modal = ne
