@@ -1,12 +1,12 @@
-const { 
-    Client, 
-    GatewayIntentBits, 
-    EmbedBuilder, 
-    ActionRowBuilder, 
-    ButtonBuilder, 
-    ButtonStyle, 
-    SlashCommandBuilder, 
-    REST, 
+const {
+    Client,
+    GatewayIntentBits,
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    SlashCommandBuilder,
+    REST,
     Routes,
     PermissionFlagsBits,
     StringSelectMenuBuilder,
@@ -19,13 +19,13 @@ const {
 const fs = require('fs');
 const https = require('https');
 
-const client = new Client({ 
+const client = new Client({
     intents: [
-        GatewayIntentBits.Guilds, 
+        GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent
-    ] 
+    ]
 });
 
 // --- 1. إدارة ملفات البيانات ---
@@ -56,21 +56,21 @@ function saveData(data) {
 const db = loadData();
 
 // === الإعدادات والآيديات ===
-const TOKEN = process.env.DISCORD_TOKEN || 'MTUzMTQ4MTExMDQyMzI3NzY2OQ.GP16rV.L-fkOP275X7GxshdvgonoLcY87qhzrnlPu2DLA'; 
+const TOKEN = process.env.DISCORD_TOKEN || 'MTUzMTQ4MTExMDQyMzI3NzY2OQ.GP16rV.L-fkOP275X7GxshdvgonoLcY87qhzrnlPu2DLA';
 const CLIENT_ID = '1531481110423277669';
-const GUILD_ID  = '1504137101225099415';
+const GUILD_ID = '1504137101225099415';
 
 // --- آيديات رومات التقارير ---
-const RECON_PENDING_CHANNEL     = '1533417338777374842';
-const RECON_APPROVED_CHANNEL    = '1533416785758519477';
+const RECON_PENDING_CHANNEL = '1533417338777374842';
+const RECON_APPROVED_CHANNEL = '1533416785758519477';
 
-const PROTECT_PENDING_CHANNEL   = '1533417411938750656';
-const PROTECT_APPROVED_CHANNEL  = '1533416727742906418';
+const PROTECT_PENDING_CHANNEL = '1533417411938750656';
+const PROTECT_APPROVED_CHANNEL = '1533416727742906418';
 
-const SUPPLY_PENDING_CHANNEL    = '1533417481291563119';
-const SUPPLY_APPROVED_CHANNEL   = '1533416591419506748';
+const SUPPLY_PENDING_CHANNEL = '1533417481291563119';
+const SUPPLY_APPROVED_CHANNEL = '1533416591419506748';
 
-const MOD_ROLE_ID               = '1504137101401260141'; 
+const MOD_ROLE_ID = '1504137101401260141';
 
 function downloadImage(url) {
     return new Promise((resolve, reject) => {
@@ -132,7 +132,7 @@ client.once('ready', async () => {
 });
 
 client.on('interactionCreate', async interaction => {
-    
+
     // --- 1. أوامر السلاش ---
     if (interaction.isChatInputCommand()) {
         const { commandName } = interaction;
@@ -150,7 +150,7 @@ client.on('interactionCreate', async interaction => {
 
             return await interaction.editReply({ embeds: [reportEmbed], components: [row] });
         }
-        
+
         if (commandName === 'حضور_المنظمة') {
             await interaction.deferReply();
             const embed = new EmbedBuilder()
@@ -288,9 +288,9 @@ client.on('interactionCreate', async interaction => {
             db.userDutyStats[userId].totalMs += duration;
             saveData(db);
 
-            return interaction.reply({ 
-                content: `🔴 **تم تسجيل خروجك بنجاح.**\n⏱️ صافي مدة العمل: **${formatDuration(duration)}**`, 
-                ephemeral: true 
+            return interaction.reply({
+                content: `🔴 **تم تسجيل خروجك بنجاح.**\n⏱️ صافي مدة العمل: **${formatDuration(duration)}**`,
+                ephemeral: true
             });
         }
 
@@ -550,7 +550,7 @@ client.on('interactionCreate', async interaction => {
 
     // --- 4. تقديم النماذج والـ Modals ---
     if (interaction.isModalSubmit()) {
-        
+
         if (interaction.customId.startsWith('modal_edit_save_')) {
             const parts = interaction.customId.split('_');
             const category = parts[3];
