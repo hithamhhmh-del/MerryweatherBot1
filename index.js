@@ -17,18 +17,7 @@ const {
     UserSelectMenuBuilder
 } = require('discord.js');
 const fs = require('fs');
-const http = require('http');
 const https = require('https');
-
-// --- 0. خادم إبقاء البوت شغالاً 24/7 (متوافق مع Render و UptimeRobot) ---
-const PORT = process.env.PORT || 10000;
-http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-    res.write("Merryweather Bot is Online!");
-    res.end();
-}).listen(PORT, () => {
-    console.log(`[HTTP] Server is running on port ${PORT}`);
-});
 
 const client = new Client({ 
     intents: [
@@ -67,7 +56,7 @@ function saveData(data) {
 const db = loadData();
 
 // === الإعدادات والآيديات ===
-const TOKEN = process.env.DISCORD_TOKEN || 'MTUzMTQ4MTExMDQyMzI3NzY2OQ.GiaAUD.legO5IIKhKRmuAA6CaMKfmlhnZCoreAYHtV6kQ'; 
+const TOKEN = process.env.DISCORD_TOKEN || 'MTUzMTQ4MTExMDQyMzI3NzY2OQ.GP16rV.L-fkOP275X7GxshdvgonoLcY87qhzrnlPu2DLA'; 
 const CLIENT_ID = '1531481110423277669';
 const GUILD_ID  = '1504137101225099415';
 
@@ -116,7 +105,7 @@ function formatDuration(ms) {
 const commands = [
     new SlashCommandBuilder().setName('حضور_المنظمة').setDescription('إرسال لوحة نظام تسجيل الحضور والغياب'),
     new SlashCommandBuilder().setName('لوحة_التحكم').setDescription('إرسال لوحة التحكم والإشراف العام'),
-    new SlashCommandBuilder().setName('جرد_الأسبوع').setDescription('استخرج تقرير جرد ساعات الحضور للأسبوع الماضي'),
+    new SlashCommandBuilder().setName('جرد_الأسبوع').setDescription('استخراج تقرير جرد ساعات الحضور للأسبوع الماضي'),
     new SlashCommandBuilder().setName('جرد_التقارير').setDescription('استخراج إحصائيات تقارير المهام للأسبوع الماضي'),
     new SlashCommandBuilder().setName('تصفير_الجرد').setDescription('تصفير كافة البيانات والتقارير وساعات الحضور لجميع الأعضاء'),
     new SlashCommandBuilder()
@@ -135,13 +124,8 @@ const rest = new REST({ version: '10' }).setToken(TOKEN);
 client.once('ready', async () => {
     console.log(`[SUCCESS] تم تسجيل الدخول بنجاح كـ ${client.user.tag}`);
     try {
-        if (GUILD_ID && GUILD_ID !== 'ضع_آيدي_سيرفرك_هنا') {
-            await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), { body: commands });
-            console.log('[SUCCESS] تم تحديث وتفعيل كافة الأوامر فوراً للسيرفر المخصص!');
-        } else {
-            await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands });
-            console.log('[SUCCESS] تم تحديث الأوامر بشكل عام!');
-        }
+        await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), { body: commands });
+        console.log('[SUCCESS] تم تحديث وتفعيل كافة الأوامر فوراً للسيرفر المخصص!');
     } catch (error) {
         console.error('[ERROR] حدث خطأ أثناء تسجيل الأوامر:', error);
     }
@@ -208,7 +192,6 @@ client.on('interactionCreate', async interaction => {
     if (interaction.isButton()) {
         const userId = interaction.user.id;
 
-        // --- فتح قائمة تسجيل الخروج الإجباري للمشرف ---
         if (interaction.customId === 'admin_force_off_menu') {
             if (!hasModRole(interaction.member)) {
                 return interaction.reply({ content: '❌ ليس لديك صلاحية المشرف.', ephemeral: true });
@@ -240,7 +223,6 @@ client.on('interactionCreate', async interaction => {
             });
         }
 
-        // --- فتح قائمة تسجيل الدخول الإداري ---
         if (interaction.customId === 'admin_force_on_menu') {
             if (!hasModRole(interaction.member)) {
                 return interaction.reply({ content: '❌ ليس لديك صلاحية المشرف.', ephemeral: true });
@@ -257,7 +239,6 @@ client.on('interactionCreate', async interaction => {
             });
         }
 
-        // --- تسجيل دخول عادي ---
         if (interaction.customId === 'org_on') {
             if (db.activeSessions[userId]) {
                 return interaction.reply({ content: '❌ أنت مسجل دخولك بالفعل بالخدمة!', ephemeral: true });
@@ -270,7 +251,6 @@ client.on('interactionCreate', async interaction => {
             return interaction.reply({ content: '🟢 **تم تسجيل دخولك بالخدمة بنجاح!** نتمنى لك توفيقاً.', ephemeral: true });
         }
 
-        // --- غفوة / استراحة مؤقتة (مع خصم الوقت) ---
         if (interaction.customId === 'org_snooze') {
             if (!db.activeSessions[userId]) {
                 return interaction.reply({ content: '❌ يجب أن تكون مسجلاً بالخدمة لتتمكن من وضع حسابك في حالة غفوة.', ephemeral: true });
@@ -289,7 +269,6 @@ client.on('interactionCreate', async interaction => {
             }
         }
 
-        // --- تسجيل خروج عادي ---
         if (interaction.customId === 'org_off') {
             if (!db.activeSessions[userId]) {
                 return interaction.reply({ content: '❌ أنت غير مسجل بالخدمة حالياً!', ephemeral: true });
@@ -315,7 +294,6 @@ client.on('interactionCreate', async interaction => {
             });
         }
 
-        // --- عرض الحضور المتواجدين ---
         if (interaction.customId === 'org_list') {
             const activeUsers = Object.keys(db.activeSessions);
             if (activeUsers.length === 0) {
@@ -342,7 +320,6 @@ client.on('interactionCreate', async interaction => {
             return interaction.reply({ embeds: [listEmbed], ephemeral: true });
         }
 
-        // --- عرض الأعضاء في غفوة للإدارة ---
         if (interaction.customId === 'admin_snooze_list') {
             const snoozeUsers = Object.keys(db.snoozeSessions);
             if (snoozeUsers.length === 0) {
@@ -363,7 +340,6 @@ client.on('interactionCreate', async interaction => {
             return interaction.reply({ embeds: [snoozeEmbed], ephemeral: true });
         }
 
-        // --- اختيار الفئة للتقارير ---
         if (interaction.customId === 'btn_open_category_select') {
             const categorySelect = new StringSelectMenuBuilder()
                 .setCustomId('select_report_category')
@@ -381,7 +357,6 @@ client.on('interactionCreate', async interaction => {
             });
         }
 
-        // --- زر التعديل النصي بواسطة المشرف ---
         if (interaction.customId.startsWith('edit_report_')) {
             if (!hasModRole(interaction.member)) {
                 return interaction.reply({ content: '❌ ليس لديك صلاحية تعديل التقرير.', ephemeral: true });
@@ -415,4 +390,294 @@ client.on('interactionCreate', async interaction => {
             }
 
             if (category === 'supply') {
-                const modal = ne
+                const modal = new ModalBuilder().setCustomId(`modal_edit_save_supply_${interaction.message.id}`).setTitle('تعديل تقرير Supply Unit 📦');
+                modal.addComponents(
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('sup_num').setLabel('رقم التقرير والتاريخ').setValue(oldEmbed.fields[0]?.value || '').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('sup_manager').setLabel('المسؤول').setValue(oldEmbed.fields[1]?.value || '').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('sup_in_out').setLabel('تم استلام | تم تسليم').setValue(oldEmbed.fields[2]?.value || '').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('sup_status').setLabel('حالة المخزون').setValue(oldEmbed.fields[3]?.value || '').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('sup_notes').setLabel('ملاحظات').setValue(oldEmbed.fields[4]?.value || '').setStyle(TextInputStyle.Paragraph).setRequired(false))
+                );
+                return await interaction.showModal(modal);
+            }
+        }
+
+        if (interaction.customId.startsWith('approve_report_') || interaction.customId.startsWith('reject_report_')) {
+            if (!hasModRole(interaction.member)) {
+                return interaction.reply({ content: '❌ ليس لديك صلاحية رئيس الفرقة/المشرف لاعتماد التقارير.', ephemeral: true });
+            }
+
+            await interaction.deferUpdate();
+
+            const isApprove = interaction.customId.startsWith('approve_report_');
+            const category = interaction.customId.split('_')[2];
+
+            const oldEmbed = interaction.message.embeds[0];
+            const updatedEmbed = EmbedBuilder.from(oldEmbed);
+
+            if (isApprove) {
+                updatedEmbed.setColor(0x2ecc71);
+                updatedEmbed.addFields({ name: '📌 الحالة', value: `✅ **تم الاعتماد بواسطة:** <@${interaction.user.id}>`, inline: false });
+
+                let approvedChannelId;
+                if (category === 'recon') approvedChannelId = RECON_APPROVED_CHANNEL;
+                else if (category === 'protection') approvedChannelId = PROTECT_APPROVED_CHANNEL;
+                else if (category === 'supply') approvedChannelId = SUPPLY_APPROVED_CHANNEL;
+
+                const approvedChannel = interaction.guild.channels.cache.get(approvedChannelId);
+
+                if (approvedChannel) {
+                    await approvedChannel.send({ embeds: [updatedEmbed] });
+
+                    const nextMessages = await interaction.channel.messages.fetch({ after: interaction.message.id, limit: 2 });
+                    const imageMsg = nextMessages.find(m => m.attachments.size > 0);
+
+                    if (imageMsg) {
+                        const attachments = Array.from(imageMsg.attachments.values()).map(a => a.url);
+                        await approvedChannel.send({ content: '📸 **الإثباتات والصور المرفقة:**', files: attachments });
+                    }
+                }
+
+                const disabledRow = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder().setCustomId('approved_btn').setLabel('تم الاعتماد ✅').setStyle(ButtonStyle.Success).setDisabled(true)
+                );
+
+                return await interaction.editReply({ embeds: [updatedEmbed], components: [disabledRow] });
+
+            } else {
+                updatedEmbed.setColor(0xe74c3c);
+                updatedEmbed.addFields({ name: '📌 الحالة', value: `❌ **تم الرفض بواسطة:** <@${interaction.user.id}>`, inline: false });
+
+                const disabledRow = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder().setCustomId('rejected_btn').setLabel('تم الرفض ❌').setStyle(ButtonStyle.Danger).setDisabled(true)
+                );
+
+                return await interaction.editReply({ embeds: [updatedEmbed], components: [disabledRow] });
+            }
+        }
+    }
+
+    // --- 3. التعامل مع القوائم المنسدلة ---
+    if (interaction.isStringSelectMenu() || interaction.isUserSelectMenu()) {
+
+        if (interaction.customId === 'select_force_off_user') {
+            if (!hasModRole(interaction.member)) {
+                return interaction.reply({ content: '❌ ليس لديك صلاحية المشرف.', ephemeral: true });
+            }
+
+            const targetUserId = interaction.values[0];
+
+            if (!db.activeSessions[targetUserId]) {
+                return interaction.reply({ content: '❌ هذا العضو غير مسجل بدخول بالخدمة بالفعل!', ephemeral: true });
+            }
+
+            delete db.activeSessions[targetUserId];
+            if (db.snoozeSessions[targetUserId]) {
+                delete db.snoozeSessions[targetUserId];
+            }
+
+            initUserDuty(targetUserId);
+            db.userDutyStats[targetUserId].forceOffCount += 1;
+            saveData(db);
+
+            return interaction.reply({
+                content: `🚨 **تم تسجيل خروج العضو <@${targetUserId}> إجبارياً بنجاح.**\n⚠️ **تنبيه:** لم يتم احتساب ساعات هذه الجلسة في الجرد النهائي.`,
+                ephemeral: true
+            });
+        }
+
+        if (interaction.customId === 'select_force_on_user') {
+            if (!hasModRole(interaction.member)) {
+                return interaction.reply({ content: '❌ ليس لديك صلاحية المشرف.', ephemeral: true });
+            }
+
+            const targetUserId = interaction.values[0];
+
+            if (db.activeSessions[targetUserId]) {
+                return interaction.reply({ content: '❌ العضو مسجل دخوله بالفعل بالخدمة.', ephemeral: true });
+            }
+
+            db.activeSessions[targetUserId] = Date.now();
+            if (db.snoozeSessions[targetUserId]) delete db.snoozeSessions[targetUserId];
+            saveData(db);
+
+            return interaction.reply({
+                content: `🟢 **تم تسجيل دخول العضو <@${targetUserId}> إلى الخدمة بواسطة المشرف.**`,
+                ephemeral: true
+            });
+        }
+
+        if (interaction.customId === 'select_report_category') {
+            const selectedCategory = interaction.values[0];
+
+            if (selectedCategory === 'recon') {
+                const modal = new ModalBuilder().setCustomId('modal_recon_unit').setTitle('تقرير Recon Team 🔭');
+                modal.addComponents(
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('recon_num').setLabel('رقم المهمة').setPlaceholder('مثال: RECON-001').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('recon_date').setLabel('التاريخ').setPlaceholder('مثال: 02/08/2026').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('recon_location').setLabel('الموقع').setPlaceholder('الموقع المستطلع').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('recon_times').setLabel('وقت البداية - وقت النهاية').setPlaceholder('مثال: 04:00 PM - 05:00 PM').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('recon_notes').setLabel('الملاحظات (النشاط/المركبات/RP/الأولوية)').setPlaceholder('اكتب الملاحظات + مستوى الأولوية (منخفض/متوسط/مرتفع)').setStyle(TextInputStyle.Paragraph).setRequired(true))
+                );
+                return await interaction.showModal(modal);
+            }
+
+            if (selectedCategory === 'protection') {
+                const modal = new ModalBuilder().setCustomId('modal_protection_unit').setTitle('تقرير Protection Unit 🛡️');
+                modal.addComponents(
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('prot_num').setLabel('رقم المهمة').setPlaceholder('مثال: PROTECT-001').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('prot_type').setLabel('نوع المهمة').setPlaceholder('تأمين اجتماع / مرافقة / فعالية').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('prot_times').setLabel('وقت البداية - وقت النهاية').setPlaceholder('مثال: 06:00 PM - 08:00 PM').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('prot_leader_count').setLabel('القائد المسؤول | عدد أفراد الفريق').setPlaceholder('مثال: القائد: فلان | العدد: 5').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('prot_notes').setLabel('الملاحظات').setPlaceholder('اكتب الملاحظات التفصيلية للمهمة...').setStyle(TextInputStyle.Paragraph).setRequired(false))
+                );
+                return await interaction.showModal(modal);
+            }
+
+            if (selectedCategory === 'supply') {
+                const modal = new ModalBuilder().setCustomId('modal_supply_unit').setTitle('تقرير Supply Unit 📦');
+                modal.addComponents(
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('sup_num').setLabel('رقم التقرير والتاريخ').setPlaceholder('رقم التقرير: SUP-001 | التاريخ: XX/XX').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('sup_manager').setLabel('المسؤول').setPlaceholder('اسم أو آيدي المسؤول').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('sup_in_out').setLabel('تم استلام | تم تسليم').setPlaceholder('تم استلام: ... | تم تسليم: ...').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('sup_status').setLabel('حالة المخزون').setPlaceholder('ممتاز / جيد / يحتاج مراجعة').setStyle(TextInputStyle.Short).setRequired(true)),
+                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('sup_notes').setLabel('ملاحظات').setPlaceholder('اكتب أي ملاحظات إضافية حول المخزون...').setStyle(TextInputStyle.Paragraph).setRequired(false))
+                );
+                return await interaction.showModal(modal);
+            }
+        }
+    }
+
+    // --- 4. تقديم النماذج والـ Modals ---
+    if (interaction.isModalSubmit()) {
+        
+        if (interaction.customId.startsWith('modal_edit_save_')) {
+            const parts = interaction.customId.split('_');
+            const category = parts[3];
+            const targetMsgId = parts[4];
+
+            const targetMsg = await interaction.channel.messages.fetch(targetMsgId).catch(() => null);
+            if (!targetMsg) return interaction.reply({ content: '❌ تعذر العثور على رسالة التقرير الأصلية.', ephemeral: true });
+
+            const oldEmbed = targetMsg.embeds[0];
+            const updatedEmbed = EmbedBuilder.from(oldEmbed);
+
+            if (category === 'recon') {
+                updatedEmbed.setFields(
+                    { name: '🔢 رقم المهمة', value: interaction.fields.getTextInputValue('recon_num'), inline: true },
+                    { name: '📅 التاريخ', value: interaction.fields.getTextInputValue('recon_date'), inline: true },
+                    { name: '📍 الموقع', value: interaction.fields.getTextInputValue('recon_location'), inline: true },
+                    { name: '⏰ التوقيت', value: interaction.fields.getTextInputValue('recon_times'), inline: false },
+                    { name: '📝 الملاحظات والنشاط والأولوية', value: interaction.fields.getTextInputValue('recon_notes'), inline: false }
+                );
+            } else if (category === 'protection') {
+                updatedEmbed.setFields(
+                    { name: '🔢 رقم المهمة', value: interaction.fields.getTextInputValue('prot_num'), inline: true },
+                    { name: '🎯 نوع المهمة', value: interaction.fields.getTextInputValue('prot_type'), inline: true },
+                    { name: '⏰ التوقيت', value: interaction.fields.getTextInputValue('prot_times'), inline: false },
+                    { name: '👑 القائد والفريق', value: interaction.fields.getTextInputValue('prot_leader_count'), inline: false },
+                    { name: '📝 الملاحظات', value: interaction.fields.getTextInputValue('prot_notes') || 'لا يوجد', inline: false }
+                );
+            } else if (category === 'supply') {
+                updatedEmbed.setFields(
+                    { name: '🔢 رقم التقرير والتاريخ', value: interaction.fields.getTextInputValue('sup_num'), inline: false },
+                    { name: '👤 المسؤول', value: interaction.fields.getTextInputValue('sup_manager'), inline: true },
+                    { name: '📦 حركة الاستلام والتسليم', value: interaction.fields.getTextInputValue('sup_in_out'), inline: false },
+                    { name: '📊 حالة المخزون', value: interaction.fields.getTextInputValue('sup_status'), inline: true },
+                    { name: '📝 ملاحظات', value: interaction.fields.getTextInputValue('sup_notes') || 'لا يوجد', inline: false }
+                );
+            }
+
+            await targetMsg.edit({ embeds: [updatedEmbed] });
+            return await interaction.reply({ content: '✏️ **تم تحديث النصوص في التقرير بنجاح!** يمكنك الآن قبوله أو رفضه.', ephemeral: true });
+        }
+
+        let category = '';
+        let pendingChannelId = '';
+        let embed = new EmbedBuilder().setTimestamp().setFooter({ text: `تم التقديم بواسطة: ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL() });
+
+        if (interaction.customId === 'modal_recon_unit') {
+            category = 'recon';
+            pendingChannelId = RECON_PENDING_CHANNEL;
+            embed.setTitle('🔭 تقرير استطلاع جديد - Recon Team')
+                .setColor(0x9b59b6)
+                .addFields(
+                    { name: '🔢 رقم المهمة', value: interaction.fields.getTextInputValue('recon_num'), inline: true },
+                    { name: '📅 التاريخ', value: interaction.fields.getTextInputValue('recon_date'), inline: true },
+                    { name: '📍 الموقع', value: interaction.fields.getTextInputValue('recon_location'), inline: true },
+                    { name: '⏰ التوقيت', value: interaction.fields.getTextInputValue('recon_times'), inline: false },
+                    { name: '📝 الملاحظات والنشاط والأولوية', value: interaction.fields.getTextInputValue('recon_notes'), inline: false }
+                );
+        } else if (interaction.customId === 'modal_protection_unit') {
+            category = 'protection';
+            pendingChannelId = PROTECT_PENDING_CHANNEL;
+            embed.setTitle('🛡️ تقرير حماية جديد - Protection Unit')
+                .setColor(0x34495e)
+                .addFields(
+                    { name: '🔢 رقم المهمة', value: interaction.fields.getTextInputValue('prot_num'), inline: true },
+                    { name: '🎯 نوع المهمة', value: interaction.fields.getTextInputValue('prot_type'), inline: true },
+                    { name: '⏰ التوقيت', value: interaction.fields.getTextInputValue('prot_times'), inline: false },
+                    { name: '👑 القائد والفريق', value: interaction.fields.getTextInputValue('prot_leader_count'), inline: false },
+                    { name: '📝 الملاحظات', value: interaction.fields.getTextInputValue('prot_notes') || 'لا يوجد', inline: false }
+                );
+        } else if (interaction.customId === 'modal_supply_unit') {
+            category = 'supply';
+            pendingChannelId = SUPPLY_APPROVED_CHANNEL;
+            embed.setTitle('📦 تقرير مستودع/تموين جديد - Supply Unit')
+                .setColor(0xe67e22)
+                .addFields(
+                    { name: '🔢 رقم التقرير والتاريخ', value: interaction.fields.getTextInputValue('sup_num'), inline: false },
+                    { name: '👤 المسؤول', value: interaction.fields.getTextInputValue('sup_manager'), inline: true },
+                    { name: '📦 حركة الاستلام والتسليم', value: interaction.fields.getTextInputValue('sup_in_out'), inline: false },
+                    { name: '📊 حالة المخزون', value: interaction.fields.getTextInputValue('sup_status'), inline: true },
+                    { name: '📝 ملاحظات', value: interaction.fields.getTextInputValue('sup_notes') || 'لا يوجد', inline: false }
+                );
+        }
+
+        if (category !== '') {
+            await interaction.reply({ content: '📸 **يرجى إرسال صور/إثباتات التقرير في هذا الشات (لديك 30 ثانية)...**', ephemeral: true });
+
+            const filter = m => m.author.id === interaction.user.id && m.attachments.size > 0;
+            const collector = interaction.channel.createMessageCollector({ filter, time: 30000 });
+            let imageFiles = [];
+
+            collector.on('collect', async message => {
+                for (const att of message.attachments.values()) {
+                    try {
+                        const buf = await downloadImage(att.url);
+                        const ext = att.name ? att.name.split('.').pop() : 'png';
+                        imageFiles.push(new AttachmentBuilder(buf, { name: `proof_${imageFiles.length + 1}.${ext}` }));
+                    } catch (e) {
+                        console.error('فشل تنزيل الصورة:', e);
+                    }
+                }
+                await message.delete().catch(() => null);
+                await interaction.editReply({ content: `📸 **تم استلام (${imageFiles.length}) صورة وحفظها.. جاري تحويل التقرير للمراجعة.**` }).catch(() => null);
+            });
+
+            collector.on('end', async () => {
+                const targetChannel = interaction.guild.channels.cache.get(pendingChannelId);
+                if (!targetChannel) {
+                    return interaction.editReply({ content: '❌ تعذر العثور على روم المراجعة الخاص بهذه الفئة.' }).catch(() => null);
+                }
+
+                const row = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder().setCustomId(`approve_report_${category}`).setLabel('قبول واعتماد ✅').setStyle(ButtonStyle.Success),
+                    new ButtonBuilder().setCustomId(`edit_report_${category}`).setLabel('تعديل التقرير ✏️').setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId(`reject_report_${category}`).setLabel('رفض التقرير ❌').setStyle(ButtonStyle.Danger)
+                );
+
+                await targetChannel.send({ embeds: [embed], components: [row] });
+
+                if (imageFiles.length > 0) {
+                    await targetChannel.send({ content: '📸 **الإثباتات والصور المرفقة:**', files: imageFiles });
+                }
+
+                await interaction.editReply({ content: '✅ **تم إرسال تقريرك بنجاح إلى روم المراجعة بانتظار اعتماد رئيس الفرقة!**' }).catch(() => null);
+            });
+        }
+    }
+});
+
+// --- 5. تشغيل البوت ---
+client.login(TOKEN);
