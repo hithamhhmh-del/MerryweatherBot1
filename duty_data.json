@@ -78,116 +78,9 @@
       "timestamp": 1785663612087
     }
   ],
-  "tickets": {
-    "1531972602250137730": {
-      "userId": "964757645590409236",
-      "name": "xrq0z",
-      "isClosed": false
-    },
-    "1531979808718717042": {
-      "userId": "964757645590409236",
-      "name": "xrq0z",
-      "closedLogMessageId": "1531982327511519255",
-      "isClosed": true
-    },
-    "1531982410412064868": {
-      "userId": "964757645590409236",
-      "name": "xrq0z",
-      "closedLogMessageId": "1531984928747556897",
-      "isClosed": true
-    },
-    "1531987075690135684": {
-      "userId": "964757645590409236",
-      "name": "استفسار-1",
-      "isClosed": false
-    },
-    "1531987219609554944": {
-      "userId": "964757645590409236",
-      "name": "استفسار-2",
-      "isClosed": true,
-      "closedLogMessageId": "1531987279164211231"
-    },
-    "1531988564085051402": {
-      "userId": "678937684500152346",
-      "name": "بان-3",
-      "closedLogMessageId": "1531991082580181104",
-      "isClosed": true
-    },
-    "1531988673657049108": {
-      "userId": "964757645590409236",
-      "name": "بان-4",
-      "isClosed": false
-    },
-    "1531994421040775188": {
-      "userId": "964757645590409236",
-      "name": "ticket-5",
-      "isClosed": true,
-      "closedLogMessageId": "1531996685058838601"
-    },
-    "1531996040155234525": {
-      "userId": "964757645590409236",
-      "name": "ticket-6",
-      "categoryId": null,
-      "isClosed": true,
-      "messagesHistory": [],
-      "closedLogMessageId": "1531996276193759418"
-    },
-    "1531996432528310362": {
-      "userId": "964757645590409236",
-      "name": "استفسار-7",
-      "isClosed": true,
-      "closedLogMessageId": "1531996647452840007"
-    },
-    "1531996486928306387": {
-      "userId": "964757645590409236",
-      "name": "شكوى-8",
-      "isClosed": true,
-      "closedLogMessageId": "1531996590796177580"
-    },
-    "1531996499473338389": {
-      "userId": "964757645590409236",
-      "name": "استقالة-9",
-      "isClosed": true,
-      "closedLogMessageId": "1531996611465445489"
-    },
-    "1531996721087774921": {
-      "userId": "964757645590409236",
-      "name": "إجازة-10",
-      "isClosed": false
-    },
-    "1532211367954878515": {
-      "userId": "964757645590409236",
-      "name": "باند-1",
-      "isClosed": true,
-      "closedLogMessageId": "1532212759800840284"
-    },
-    "1532212725110014134": {
-      "userId": "964757645590409236",
-      "name": "باند-2",
-      "isClosed": true,
-      "closedLogMessageId": "1532212886951297146"
-    },
-    "1532212730117882049": {
-      "userId": "678937684500152346",
-      "name": "إجازة-1",
-      "isClosed": false
-    },
-    "1532218668149112906": {
-      "userId": "964757645590409236",
-      "name": "باند-3",
-      "isClosed": false,
-      "closedLogMessageId": "1532218758679105683"
-    }
-  },
-  "ticketCounter": 12,
-  "ticketCounters": {
-    "باند": 3,
-    "إجازة": 1,
-    "cat_complaint": 6,
-    "cat_inquiry": 3,
-    "cat_resignation": 2,
-    "cat_vacation": 1
-  },
+  "tickets": {},
+  "ticketCounter": 0,
+  "ticketCounters": {},
   "lastReportTime": {
     "964757645590409236": 1785663612087
   },
@@ -228,3 +121,4 @@
     }
   },
   "snoozeSessions": {}
+}
